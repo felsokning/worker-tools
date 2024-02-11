@@ -1,5 +1,9 @@
 ## DISCLAIMER :warning:
-Octopus Deploy defines that [using non glibc distributions is _**not**_ supported by Calamari](https://octopus.com/docs/projects/steps/execution-containers-for-workers#supported-linux-distributions) -- most notably, Alpine. The Alpine version provided here has been verified to work on a local version of the Octopus Deploy Server container. YMMV with any and all scenarios with the Alpine images and PR's to address any issues would be highly appreciated.
+Octopus Deploy defines that [using non glibc distributions is _**not**_ supported by Calamari](https://octopus.com/docs/projects/steps/execution-containers-for-workers#supported-linux-distributions) -- most notably, Alpine. 
+
+The Alpine version provided here has been verified to work on a local version of the Octopus Deploy Server container. 
+
+YMMV with any and all scenarios with the Alpine images and PR's to address any issues would be highly appreciated.
 
 ![Proof Alpine Works for Script Process](./alpine_proof.png)
 

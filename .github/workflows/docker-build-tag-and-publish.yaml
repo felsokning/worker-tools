@@ -15,10 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: /worker-tools/Alpine.3.19/Dockerfile
+          - dockerfile: /Alpine.3.19/Dockerfile
             image: felsokning/worker-tools
             tags: ${{ github.ref_name }}-alpine.3.19
-          - dockerfile: /worker-tools/Arch/Dockerfile
+          - dockerfile: /Arch/Dockerfile
             image: felsokning/worker-tools
             tags: ${{ github.ref_name }}-arch
 
@@ -38,7 +38,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5.1.0
       with:
-        context: ./worker-tools
+        context: ${{ github.workspace }}
         file: ${{ matrix.dockerfile }}
         push: true
         tags: ${{ matrix.tags }}

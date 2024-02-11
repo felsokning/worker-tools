@@ -4,6 +4,7 @@ FROM archlinux:base-devel-20240101.0.204074 as toolsbuilder
 # Fix for pipx breaking docker output (via emoji)
 ENV USE_EMOJI=false
 
+# NOTE: makepkg output goes via stderror, so we have to silence this or we fill the runner's build log and the build fails.
 RUN pacman-key --init \
     && pacman -Syu --noconfirm \
     && pacman -S --noconfirm cargo git go go-md2man make python python-pipx \
@@ -16,18 +17,18 @@ RUN pacman-key --init \
     # Make Umoci to Get Around CVEs (No New Releases Published Since 2022)
     && git clone https://github.com/opencontainers/umoci.git \
     && cd umoci \
-    && make DESTDIR=/ install \
+    && make -si DESTDIR=/ install > /dev/null \
     && cd / \
     && rm -rf umoci \
     # Make MSFT SQL Server Tools
     && su - builder -c "git clone https://aur.archlinux.org/libldap24.git" \
-    && su - builder -c "cd libldap24 && makepkg -sirc --noconfirm" \
+    && su - builder -c "cd libldap24 && (makepkg -sirc --noconfirm > /dev/null 2>&1)" \
     && su - builder -c "git clone https://aur.archlinux.org/mssql-server.git" \
-    && su - builder -c "cd mssql-server && makepkg -sirc --noconfirm" \
+    && su - builder -c "cd mssql-server && (makepkg -sirc --noconfirm > /dev/null 2>&1)" \
     && su - builder -c "git clone https://aur.archlinux.org/msodbcsql.git" \
-    && su - builder -c "cd msodbcsql && makepkg -sirc --noconfirm" \
+    && su - builder -c "cd msodbcsql && (makepkg -sirc --noconfirm > /dev/null 2>&1)" \
     && su - builder -c "git clone https://aur.archlinux.org/mssql-tools.git" \
-    && su - builder -c "cd mssql-tools && makepkg -sirc --noconfirm"
+    && su - builder -c "cd mssql-tools && (makepkg -sirc --noconfirm > /dev/null 2>&1)"
 
 FROM archlinux:base-20240101.0.204074 as intermediary
 

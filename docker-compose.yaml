@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  alpine:
+    image: felsokning/worker-tools:alpine.3.19
+    build: 
+      dockerfile: /Alpine.3.19/Dockerfile
+  arch:
+    image: felsokning/worker-tools:arch
+    build: 
+      dockerfile: /Arch/Dockerfile
+  fedora:
+    image: felsokning/worker-tools:fedora.40
+    build:
+      dockerfile: /Fedora/Dockerfile

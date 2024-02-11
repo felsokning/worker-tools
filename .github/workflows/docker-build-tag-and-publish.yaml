@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./Alpine.3.19/Dockerfile
+          - dockerfile: ${{ github.workspace }}/Alpine.3.19/Dockerfile
             image: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
-          - dockerfile: ./Arch/Dockerfile
+          - dockerfile: ${{ github.workspace }}/Arch/Dockerfile
             image: felsokning/worker-tools:${{ github.ref_name }}-arch
 
     steps:

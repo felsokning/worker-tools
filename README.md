@@ -30,4 +30,4 @@ See the docs to get started using the `felsokning/worker-tools` image as an [exe
 
 The images I publish are [semantically versioned](https://semver.org/). 
 
-To ensure stability within your deployment processes, I do not publish non-semantically versioned builds, to prevent breaking your deployment process. Use the full `major.minor.patch` tag when using the `felsokning/worker-tools` image - for example, use `1.0.0-alpine.3.19`. 
+To ensure stability within your deployment processes, I do not publish non-semantically versioned builds, to prevent breaking your deployment process. Use the full `major.minor.patch` tag when using the `felsokning/worker-tools` image - for example, use `felsokning/worker-tools:1.0.0-alpine.3.19`. 

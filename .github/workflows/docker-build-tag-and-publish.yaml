@@ -15,10 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: /Alpine.3.19/Dockerfile
+          - dockerfile: ./Alpine.3.19/Dockerfile
             image: felsokning/worker-tools
             tags: ${{ github.ref_name }}-alpine.3.19
-          - dockerfile: /Arch/Dockerfile
+          - dockerfile: ./Arch/Dockerfile
             image: felsokning/worker-tools
             tags: ${{ github.ref_name }}-arch
 

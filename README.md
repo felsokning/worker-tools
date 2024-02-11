@@ -26,6 +26,8 @@ If the tools or the way they are managed don't fit your particular use case, it 
 
 ## Getting Started
 
-See the docs to get started using the `octopusdeploy/worker-tools` image as an [execution container for workers](https://octopus.com/docs/deployment-process/execution-containers-for-workers).
+See the docs to get started using the `felsokning/worker-tools` image as an [execution container for workers](https://octopus.com/docs/deployment-process/execution-containers-for-workers).
 
-The images I publish are [semantically versioned](https://semver.org/). To ensure stability within your deployment processes, we recommend using the full `major.minor.patch` tag when using the `octopusdeploy/worker-tools` image - for example, use `2.0.2-ubuntu.22.04`. I do not publish non-semantically versioned builds, to prevent breaking your deployment process.
+The images I publish are [semantically versioned](https://semver.org/). 
+
+To ensure stability within your deployment processes, I do not publish non-semantically versioned builds, to prevent breaking your deployment process. Use the full `major.minor.patch` tag when using the `felsokning/worker-tools` image - for example, use `1.0.0-alpine.3.19`. 

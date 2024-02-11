@@ -16,9 +16,11 @@ jobs:
       matrix:
         include:
           - dockerfile: ${{ github.workspace }}/Alpine.3.19/Dockerfile
-            image: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
+            image: felsokning/worker-tools
+            tags: ${{ github.ref_name }}-alpine.3.19
           - dockerfile: ${{ github.workspace }}/Arch/Dockerfile
-            image: felsokning/worker-tools:${{ github.ref_name }}-arch
+            image: felsokning/worker-tools
+            tags: ${{ github.ref_name }}-arch
 
     steps:
     - name: Check out code
@@ -39,5 +41,5 @@ jobs:
         context: .
         file: ${{ matrix.dockerfile }}
         push: true
-        # tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ matrix.tags }}
         labels: ${{ steps.meta.outputs.labels }}

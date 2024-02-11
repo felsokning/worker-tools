@@ -17,10 +17,10 @@ jobs:
         include:
           - dockerfile: ./Alpine.3.19/Dockerfile
             image: felsokning/worker-tools
-            tags: ${{ github.ref_name }}-alpine.3.19
+            tags: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
           - dockerfile: ./Arch/Dockerfile
             image: felsokning/worker-tools
-            tags: ${{ github.ref_name }}-arch
+            tags: felsokning/worker-tools:${{ github.ref_name }}-arch
 
     steps:
     - name: Check out code
@@ -35,6 +35,8 @@ jobs:
       uses: docker/metadata-action@v5.5.1
       with:
         images: ${{ matrix.image }}
+        flavor: |
+          latest=false
     - name: Build and push Docker image
       uses: docker/build-push-action@v5.1.0
       with:

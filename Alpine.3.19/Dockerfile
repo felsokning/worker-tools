@@ -63,7 +63,7 @@ RUN apk update \
     && az extension add --name azure-devops \
     && az extension add --name azure-firewall \
     && az extension add --name functionapp \
-    && az extension add --name webapp \
+    && az extension add --name webapp
 
 FROM scratch as final
 

@@ -1,22 +1,25 @@
-FROM alpine:3.19 as builder
-
-COPY --from=octopusdeploy/octo:9.1.7 ./octo/. /octo/
+FROM fedora:40
 
 ARG Azure_Powershell_Version=11.2.0
 ARG Helm_Version=v3.7.1
 ARG Kubelogin_Version=v0.0.30
 ARG Terraform_Version=1.6.6
 
-RUN apk update \
-    && apk add --upgrade apk-tools \
-    && apk upgrade --available \
-    # Install .NET and PowerShell dependencies
-    && apk add --no-cache bash ca-certificates curl gcompat icu-libs krb5-libs less libgcc libintl libstdc++ ncurses-terminfo-base openssl tzdata userspace-rcu zlib \
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/community/ add --no-cache umoci \
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache lttng-ust \
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache libssl1.1 \
-    # .NET8 did not ship with 3.19 (See: https://github.com/dotnet/sdk/issues/37790)
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/community add --no-cache aspnetcore8-runtime dotnet8-runtime dotnet8-sdk \
+RUN dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
+    && dnf update -y \
+    && dnf upgrade -y \
+    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git libicu make nano openssl python3-pip unzip wget -y \
+    # Add MSFT Respository
+    && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
+    && chmod +x ./dotnet-install.sh \
+    && ./dotnet-install.sh --version latest \
+    && ./dotnet-install.sh --version latest --runtime aspnetcore \
+    && ./dotnet-install.sh --version latest --runtime dotnet \
+    # Install PowerShell
+    && rpm --import https://packages.microsoft.com/keys/microsoft.asc \
+    && curl https://packages.microsoft.com/config/rhel/9/prod.repo | tee /etc/yum.repos.d/microsoft.repo \
+    && dnf makecache \
+    && dnf install powershell -y \
     # Install Helm 3
     && wget --quiet -O - https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash -s -- -v ${Helm_Version} \
     # Install Istio CLI
@@ -36,12 +39,6 @@ RUN apk update \
     && curl -sL https://run.linkerd.io/install | sh \
     && mv /root/.linkerd2/bin/linkerd /usr/local/bin \
     && rm -rf /root/.linkerd2 \
-    # Install PowerShell
-    && curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/powershell-7.4.1-linux-musl-x64.tar.gz -o /tmp/powershell.tar.gz \
-    && mkdir -p /opt/microsoft/powershell/7 \
-    && tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
-    && chmod +x /opt/microsoft/powershell/7/pwsh \
-    && ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh \
     # Install Octopus.Client
     && pwsh -c 'Install-Package -Force Octopus.Client -MaximumVersion "'${Octopus_Client_Version}'" -source https://www.nuget.org/api/v2 -SkipDependencies -Verbose' \
     && octopusClientPackagePath=$(pwsh -c '(Get-Item ((Get-Package Octopus.Client).source)).Directory.FullName') \
@@ -50,9 +47,11 @@ RUN apk update \
     && pwsh -c 'Install-Module -Force -Name Az -AllowClobber -Scope AllUsers -MaximumVersion "'${Azure_Powershell_Version}'" -Verbose' \
     # Install octopus-cli
     && curl -L https://github.com/OctopusDeploy/cli/raw/main/scripts/install.sh | bash \
-    # # Install octopuscli
-    && echo "dotnet /octo/octo.dll \"\$@\"" > /octo/alpine \
-    && ln /octo/alpine /usr/bin/octo \
+    # Install octopuscli
+    && wget -O OctopusTools.9.1.7.linux-x64.tar.gz https://download.octopusdeploy.com/octopus-tools/9.1.7/OctopusTools.9.1.7.linux-x64.tar.gz \
+    && tar zxf OctopusTools.9.1.7.linux-x64.tar.gz \
+    && rm -f OctopusTools.9.1.7.linux-x64.tar.gz \
+    && mv octo /usr/bin/octo \
     && chmod +x /usr/bin/octo \
     # Install Terraform
     && wget https://releases.hashicorp.com/terraform/${Terraform_Version}/terraform_${Terraform_Version}_linux_amd64.zip \
@@ -64,7 +63,9 @@ RUN apk update \
     && az extension add --name azure-firewall \
     && az extension add --name functionapp \
     && az extension add --name webapp \
-
-FROM scratch as final
-
-COPY --from=builder / /
+    # Make Umoci to Get Around CVEs (No New Releases Published Since 2022)
+    && git clone https://github.com/opencontainers/umoci.git \
+    && cd umoci \
+    && make -si DESTDIR=/ install > /dev/null \
+    && cd / \
+    && rm -rf umoci \

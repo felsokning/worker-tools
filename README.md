@@ -14,7 +14,7 @@ Unofficially sanctioned worker images for Octopus Deploy available on [docker hu
 | Operating System         | Installed Tools and Versions                                                                                                                         |
 |--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Alpine 3.19              | ([Dockerfile](https://github.com/felsokning/worker-tools/blob/main/Alpine.3.19/Dockerfile))                                                          |
-| Arh Linux                | ([Dockerfile](https://github.com/felsokning/worker-tools/blob/main/Arch/Dockerfile))                                                                 |
+| Arch Linux               | ([Dockerfile](https://github.com/felsokning/worker-tools/blob/main/Arch/Dockerfile))                                                                 |
 | Fedora                   | ([Dockerfile](https://github.com/felsokning/worker-tools/blob/main/Fedora/Dockerfile))                                                               |
 
 ## Management

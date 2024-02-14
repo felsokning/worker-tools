@@ -11,7 +11,7 @@ RUN apk update \
     && apk add --upgrade apk-tools \
     && apk upgrade --available \
     # Install .NET and PowerShell dependencies
-    && apk add --no-cache bash ca-certificates curl gcompat icu-libs krb5-libs less libgcc libintl libstdc++ ncurses-terminfo-base openssl tzdata userspace-rcu zlib \
+    && apk add --no-cache bash ca-certificates cargo curl gcompat icu-libs krb5-libs less libffi-dev libgcc libintl libstdc++ make musl-dev ncurses-terminfo-base openssl openssl-dev pipx python3-dev py3-pip tzdata userspace-rcu zlib \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/community/ add --no-cache umoci \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache lttng-ust \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache libssl1.1 \
@@ -59,6 +59,8 @@ RUN apk update \
     && unzip terraform_${Terraform_Version}_linux_amd64.zip \
     && mv terraform /usr/bin/terraform \
     && rm -f terraform_${Terraform_Version}_linux_amd64.zip \
+    && pipx install azure-cli \
+    && ln -s /root/.local/bin/az /usr/bin/az \
     # Add Az CLI Extensions
     && az extension add --name azure-devops \
     && az extension add --name azure-firewall \

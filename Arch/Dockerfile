@@ -1,5 +1,6 @@
+ARG tag
 
-FROM archlinux:base-devel-20240101.0.204074 as toolsbuilder
+FROM archlinux/archlinux:base-devel-${tag} as toolsbuilder
 
 # Fix for pipx breaking docker output (via emoji)
 ENV USE_EMOJI=false
@@ -30,7 +31,7 @@ RUN pacman-key --init \
     && su - builder -c "git clone https://aur.archlinux.org/mssql-tools.git" \
     && su - builder -c "cd mssql-tools && (makepkg -sirc --noconfirm > /dev/null 2>&1)"
 
-FROM archlinux:base-20240101.0.204074 as intermediary
+FROM archlinux/archlinux:base-${tag} as intermediary
 
 ARG Azure_Powershell_Version=11.2.0
 ARG Helm_Version=v3.7.1

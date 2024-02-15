@@ -55,6 +55,10 @@ jobs:
           docker rmi $(docker image ls -aq)
           df -h
           docker system prune --all --force
+      - name: Get Latest Arch Tag
+        id: archtag
+        shell: pwsh
+        run: $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty) >> "$GITHUB_OUTPUT"
       - name: Check out code
         uses: actions/checkout@v4.1.1
       - name: Login to Docker Hub
@@ -72,6 +76,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5.1.0
         with:
+          build-args: tag=${{ steps.archtag.outputs.tag }}
           context: ${{ github.workspace }}
           file: ./Arch/Dockerfile
           push: true

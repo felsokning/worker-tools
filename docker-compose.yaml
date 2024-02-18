@@ -5,10 +5,16 @@ services:
     image: felsokning/worker-tools:alpine.3.19
     build: 
       dockerfile: /Alpine.3.19/Dockerfile
+      args:
+        - tag=${tag}
   arch:
     image: felsokning/worker-tools:arch
     build: 
       dockerfile: /Arch/Dockerfile
+  debian:
+    image: felsokning/worker-tools:debian.11
+    build: 
+      dockerfile: /Debian.11/Dockerfile
   fedora:
     image: felsokning/worker-tools:fedora.40
     build:

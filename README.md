@@ -18,6 +18,15 @@ Unofficially sanctioned worker images for Octopus Deploy available on [docker hu
 | Debian 11 (Bullseye)     | ([Dockerfile](https://github.com/felsokning/worker-tools/blob/main/Debian.11/Dockerfile))                                                            |
 | Fedora                   | ([Dockerfile](https://github.com/felsokning/worker-tools/blob/main/Fedora/Dockerfile))                                                               |
 
+# Docker Compose
+
+Run the following commands in PowerShell to docker compose from the repository's root:
+
+```
+$tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty)
+docker-compose build --build-arg tag=$tag
+```
+
 ## Management
 
 The Worker Tools images provided by this repository are currently updated on at-best effort basis. This repository should contain the latest stable versions of all of the tools.

@@ -75,7 +75,8 @@ RUN groupadd ${Group} \
     && cd umoci \
     && make -si DESTDIR=/ install > /dev/null \
     && cd / \
-    && rm -rf umoci 
+    && rm -rf umoci \
+    && chmod +x /keygen.sh
 
 FROM scratch as intermediary
 

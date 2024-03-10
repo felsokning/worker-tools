@@ -37,7 +37,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ${{ github.workspace }}
+          context: ${{ github.workspace }}/Alpine.3.19
           file: ./Alpine.3.19/Dockerfile
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
@@ -59,6 +59,7 @@ jobs:
         id: dailyarchtag
         shell: bash
         run: |
+            apt-get install jq yq
             VERSION=$(curl -s https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom | xq -r '.feed.entry[0].title')
             FIXED_VERSION=$(echo "${VERSION//v}")
             echo "tag=${FIXED_VERSION}" >> "$GITHUB_OUTPUT"
@@ -80,7 +81,7 @@ jobs:
         uses: docker/build-push-action@v5.1.0
         with:
           build-args: tag=${{ steps.dailyarchtag.outputs.tag }}
-          context: ${{ github.workspace }}
+          context: ${{ github.workspace }}/Arch
           file: ./Arch/Dockerfile
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-arch
@@ -115,7 +116,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ${{ github.workspace }}
+          context: ${{ github.workspace }}/Debian.11
           file: ./Debian.11/Dockerfile
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-debian.11
@@ -150,7 +151,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ${{ github.workspace }}
+          context: ${{ github.workspace }}/Fedora
           file: ./Fedora/Dockerfile
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-fedora.40

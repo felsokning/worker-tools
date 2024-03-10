@@ -15,7 +15,7 @@ RUN groupadd ${Group} \
     && dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && dnf update -y \
     && dnf upgrade -y \
-    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang libicu make nano openssl pass python3-pip unzip wget -y \
+    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang go-md2man libicu make nano openssl pass python3-pip unzip wget -y \
     # Add MSFT Respository
     && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
     && chmod +x ./dotnet-install.sh \

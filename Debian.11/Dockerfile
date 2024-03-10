@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bullseye-slim as builder
 
 ARG Azure_Powershell_Version=11.2.0
 ARG Helm_Version=v3.7.1
@@ -6,10 +6,18 @@ ARG Octopus_Cli_Legacy_Version=9.1.7
 ARG Octopus_Cli_Version=1.7.1
 ARG Terraform_Version=1.6.6-1
 
-RUN apt-get update \
+ARG User=octoworker
+ARG Group=octoworker
+
+COPY keygen.sh /keygen.sh
+
+RUN groupadd ${Group} \
+    && useradd -m -g ${Group} -s /bin/bash ${User} \
+    && apt-get update \
     && apt-get dist-upgrade \
     && apt-get upgrade \
-    && apt-get install -y apt-transport-https apt-utils augeas-tools ca-certificates curl git gpg gradle jq libc6 libgcc1 libgcc-s1 libgssapi-krb5-2 libicu67 libssl1.1 libstdc++6 lsb-release maven openssh-client rsync software-properties-common unzip wget zlib1g \
+    && apt-get install -y apt-transport-https apt-utils augeas-tools ca-certificates curl docker git gnupg2 gradle jq libc6 libgcc1 libgcc-s1 \
+        libgssapi-krb5-2 libicu67 libssl1.1 libstdc++6 lsb-release maven openssh-client pass rsync software-properties-common unzip wget zlib1g \
     && wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm -f packages-microsoft-prod.deb \
@@ -29,5 +37,19 @@ RUN apt-get update \
     && curl -sL https://run.linkerd.io/install | sh \
     && cp /root/.linkerd2/bin/linkerd /usr/local/bin \
     && rm -rf /root/.linkerd2 \
-    && pwsh -c 'Install-Module -Force -Name Az -AllowClobber -Scope AllUsers -MaximumVersion "'${Azure_Powershell_Version}'" -Verbose'
+    && pwsh -c 'Install-Module -Force -Name Az -AllowClobber -Scope AllUsers -MaximumVersion "'${Azure_Powershell_Version}'" -Verbose' \
+    && chmod +x /keygen.sh
  
+FROM scratch as intermediary
+
+ARG User=octoworker
+COPY --from=builder / /
+
+USER ${User}
+RUN mkdir -p /home/${User}/.docker/ \
+    && touch /home/${User}/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
+    && export GPG_TTY=$(tty) \
+    && /keygen.sh \
+    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
+    && pass init $(echo $fingerprint)

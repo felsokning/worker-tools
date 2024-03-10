@@ -4,18 +4,22 @@ services:
   alpine:
     image: felsokning/worker-tools:alpine.3.19
     build: 
-      dockerfile: /Alpine.3.19/Dockerfile
-      args:
-        - tag=${tag}
+      dockerfile: Dockerfile
+      context: /Alpine.3.19/
   arch:
     image: felsokning/worker-tools:arch
     build: 
-      dockerfile: /Arch/Dockerfile
+      dockerfile: Dockerfile
+      context: /Arch/
+      args:
+        - tag=${tag}
   debian:
     image: felsokning/worker-tools:debian.11
     build: 
-      dockerfile: /Debian.11/Dockerfile
+      dockerfile: Dockerfile
+      context: /Debian.11/
   fedora:
     image: felsokning/worker-tools:fedora.40
     build:
-      dockerfile: /Fedora/Dockerfile
+      dockerfile: Dockerfile
+      context: /Fedora/

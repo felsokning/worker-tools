@@ -57,12 +57,8 @@ jobs:
           docker system prune --all --force
       - name: Get Latest Daily Arch Tag
         id: dailyarchtag
-        shell: bash
-        run: |
-            apt-get install jq yq
-            VERSION=$(curl -s https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom | xq -r '.feed.entry[0].title')
-            FIXED_VERSION=$(echo "${VERSION//v}")
-            echo "tag=${FIXED_VERSION}" >> "$GITHUB_OUTPUT"
+        shell: pwsh
+        run: $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty); Write-Output "tag=$($tag)" >> $env:GITHUB_OUTPUT
       - name: Check out code
         uses: actions/checkout@v4.1.1
       - name: Login to Docker Hub

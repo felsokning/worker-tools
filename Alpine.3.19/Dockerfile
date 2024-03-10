@@ -7,13 +7,22 @@ ARG Helm_Version=v3.7.1
 ARG Kubelogin_Version=v0.0.30
 ARG Terraform_Version=1.6.6
 
-RUN apk update \
+ARG User=octoworker
+ARG Group=octoworker
+
+COPY keygen.sh /keygen.sh
+
+RUN addgroup -S ${Group} \
+    && adduser --disabled-password --ingroup ${Group} --shell /bin/bash ${User} \
+    && apk update \
     && apk add --upgrade apk-tools \
     && apk upgrade --available \
     # Install .NET and PowerShell dependencies
-    && apk add --no-cache bash ca-certificates cargo curl gcompat icu-libs krb5-libs less libffi-dev libgcc libintl libstdc++ make musl-dev ncurses-terminfo-base openssl openssl-dev pipx python3-dev py3-pip tzdata userspace-rcu zlib \
+    && apk add --no-cache bash ca-certificates cargo coreutils curl docker gcompat grep icu-libs krb5-libs less libffi-dev \
+        libgcc libintl libstdc++ make musl-dev ncurses-terminfo-base openssl openssl-dev pass pipx python3-dev py3-pip tzdata \
+        userspace-rcu zlib \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/community/ add --no-cache umoci \
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache lttng-ust \
+    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache lttng-ust gnupg \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache libssl1.1 \
     # .NET8 did not ship with 3.19 (See: https://github.com/dotnet/sdk/issues/37790)
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/community add --no-cache aspnetcore8-runtime dotnet8-runtime dotnet8-sdk \
@@ -65,8 +74,19 @@ RUN apk update \
     && az extension add --name azure-devops \
     && az extension add --name azure-firewall \
     && az extension add --name functionapp \
-    && az extension add --name webapp
+    && az extension add --name webapp \
+    && chmod +x /keygen.sh
 
-FROM scratch as final
+FROM scratch as intermediary
 
+ARG User=octoworker
 COPY --from=builder / /
+
+USER ${User}
+RUN mkdir -p /home/${User}/.docker/ \
+    && touch /home/${User}/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
+    && export GPG_TTY=$(tty) \
+    && /keygen.sh \
+    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
+    && pass init $(echo $fingerprint)

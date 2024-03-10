@@ -1,14 +1,21 @@
-FROM fedora:40
+FROM fedora:40 as builder
 
 ARG Azure_Powershell_Version=11.2.0
 ARG Helm_Version=v3.7.1
 ARG Kubelogin_Version=v0.0.30
 ARG Terraform_Version=1.6.6
 
-RUN dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
+COPY keygen.sh /keygen.sh
+
+ARG User=octoworker
+ARG Group=octoworker
+
+RUN groupadd ${Group} \
+    && useradd -m -g ${Group} -s /bin/bash ${User} \
+    && dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && dnf update -y \
     && dnf upgrade -y \
-    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git libicu make nano openssl python3-pip unzip wget -y \
+    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 libicu make nano openssl pass python3-pip unzip wget -y \
     # Add MSFT Respository
     && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
     && chmod +x ./dotnet-install.sh \
@@ -68,4 +75,18 @@ RUN dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && cd umoci \
     && make -si DESTDIR=/ install > /dev/null \
     && cd / \
-    && rm -rf umoci \
+    && rm -rf umoci 
+
+FROM scratch as intermediary
+
+ARG User=octoworker
+COPY --from=builder / /
+
+USER ${User}
+RUN mkdir -p /home/${User}/.docker/ \
+    && touch /home/${User}/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
+    && export GPG_TTY=$(tty) \
+    && /keygen.sh \
+    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
+    && pass init $(echo $fingerprint)

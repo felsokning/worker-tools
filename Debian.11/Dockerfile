@@ -17,7 +17,8 @@ RUN groupadd ${Group} \
     && apt-get dist-upgrade \
     && apt-get upgrade \
     && apt-get install -y apt-transport-https apt-utils augeas-tools ca-certificates curl docker git gnupg2 gradle jq libc6 libgcc1 libgcc-s1 \
-        libgssapi-krb5-2 libicu67 libssl1.1 libstdc++6 lsb-release maven openssh-client pass rsync software-properties-common unzip wget zlib1g \
+        libgssapi-krb5-2 libicu67 libssl1.1 libstdc++6 lolcat lsb-release maven openssh-client neofetch pass rsync software-properties-common \
+        unzip wget zlib1g \
     && wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm -f packages-microsoft-prod.deb \
@@ -43,13 +44,12 @@ RUN groupadd ${Group} \
 FROM scratch as intermediary
 
 ARG User=octoworker
+USER ${User}
+
 COPY --from=builder / /
+COPY .bashrc /home/${User}/.bashrc
 
 USER ${User}
 RUN mkdir -p /home/${User}/.docker/ \
     && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
-    && export GPG_TTY=$(tty) \
-    && /keygen.sh \
-    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
-    && pass init $(echo $fingerprint)
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json

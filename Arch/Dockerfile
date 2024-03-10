@@ -27,7 +27,7 @@ RUN groupadd ${Group} \
     && pacman --noconfirm -Syyu \
     && pacman --noconfirm -S aspnet-runtime chaotic-aur/azure-cli curl dotnet-runtime dotnet-sdk extra/argocd extra/code \
         extra/docker extra/eksctl extra/gradle core/groff extra/jq extra/kubectl extra/maven extra/nodejs extra/rsync \
-        extra/skopeo extra/terraform extra/umoci extra/yq gnupg nano pass powershell unzip wget \
+        extra/skopeo extra/terraform extra/umoci extra/yq gnupg lolcat nano neofetch pass powershell unzip wget \
     # Install ECS CLI
     && curl --silent --location "https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-v${Ecs_Cli_Version}" -o /usr/local/bin/ecs-cli \
     && chmod +x /usr/local/bin/ecs-cli \
@@ -63,15 +63,12 @@ RUN groupadd ${Group} \
 FROM scratch as intermediary
 
 ARG User=octoworker
+USER ${User}
+
 COPY --from=builder / /
+COPY .bashrc /home/${User}/.bashrc
 
 USER ${User}
 RUN mkdir -p /home/${User}/.docker/ \
     && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
-    && export GPG_TTY=$(tty) \
-    && /keygen.sh \
-    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
-    && pass init $(echo $fingerprint) \
-    # Build-Kit Sandbox keeps a lock, so let's remove it
-    && rm ~/.gnupg/public-keys.d/pubring.db.lock
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json

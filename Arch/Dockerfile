@@ -10,14 +10,7 @@ COPY keygen.sh /keygen.sh
 COPY pacman.conf /etc/pacman.conf
 COPY chaotic-mirrorlist /etc/pacman.d/chaotic-mirrorlist
 
-ARG User=octoworker
-ARG Group=octoworker
-ARG OctoGroup=octopus
-
-RUN groupadd -g 1999 ${OctoGroup} \
-    && groupadd -g 2000 ${Group} \
-    && useradd -m -g ${Group} -g ${OctoGroup} -s /bin/bash ${User} \
-    && pacman-key --init \
+RUN pacman-key --init \
     # Populate Arch Linux Keys.
     && pacman-key --populate archlinux \
     # Receive Chaotic AUR Key.
@@ -64,13 +57,9 @@ RUN groupadd -g 1999 ${OctoGroup} \
 
 FROM scratch as intermediary
 
-ARG User=octoworker
-USER ${User}
-
 COPY --from=builder / /
-COPY .bashrc /home/${User}/.bashrc
+COPY .bashrc /root/.bashrc
 
-USER ${User}
-RUN mkdir -p /home/${User}/.docker/ \
-    && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json
+RUN mkdir -p /root/.docker/ \
+    && touch /root/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json

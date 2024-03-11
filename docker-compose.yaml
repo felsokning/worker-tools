@@ -20,13 +20,9 @@ services:
     image: felsokning/worker-tools:fedora.40
     build:
       dockerfile: Dockerfile
-<<<<<<< HEAD
-      context: /Fedora/
+      context: ./Fedora/
   OctopusDeployServer:
     image: felsokning/worker-tools:octopusdeployserver
     build:
       dockerfile: Dockerfile
-      context: /OctopusDeployServer/  
-=======
-      context: ./Fedora/
->>>>>>> 0aac767cf070dc67899d72ecc837d46350389955
+      context: ./OctopusDeployServer/  

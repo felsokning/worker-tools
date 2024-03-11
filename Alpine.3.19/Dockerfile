@@ -7,16 +7,9 @@ ARG Helm_Version=v3.7.1
 ARG Kubelogin_Version=v0.0.30
 ARG Terraform_Version=1.6.6
 
-ARG User=octopus
-ARG Group=octoworker
-ARG OctoGroup=octopus
-
 COPY keygen.sh /keygen.sh
 
-RUN addgroup -g 1999 -S ${OctoGroup} \
-    && addgroup -g 2000 -S ${Group} \
-    && adduser --disabled-password --ingroup ${Group} --ingroup ${OctoGroup} --shell /bin/bash ${User} \
-    && apk update \
+RUN apk update \
     && apk add --upgrade apk-tools \
     && apk upgrade --available \
     # Install .NET and PowerShell dependencies
@@ -81,11 +74,9 @@ RUN addgroup -g 1999 -S ${OctoGroup} \
 
 FROM scratch as intermediary
 
-ARG User=octopus
 COPY --from=builder / /
-COPY .bashrc /home/${User}/.bashrc
+COPY .bashrc /root/.bashrc
 
-USER ${User}
-RUN mkdir -p /home/${User}/.docker/ \
-    && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json
+RUN mkdir -p /root/.docker/ \
+    && touch /root/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json

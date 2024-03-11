@@ -6,16 +6,9 @@ ARG Octopus_Cli_Legacy_Version=9.1.7
 ARG Octopus_Cli_Version=1.7.1
 ARG Terraform_Version=1.6.6-1
 
-ARG User=octoworker
-ARG Group=octoworker
-ARG OctoGroup=octopus
-
 COPY keygen.sh /keygen.sh
 
-RUN groupadd -g 1999 ${OctoGroup} \
-    && groupadd -g 2000 ${Group} \
-    && useradd -m -g ${Group} -g ${OctoGroup} -s /bin/bash ${User} \
-    && apt-get update \
+RUN apt-get update \
     && apt-get dist-upgrade \
     && apt-get upgrade \
     && apt-get install -y apt-transport-https apt-utils augeas-tools ca-certificates curl docker git gnupg2 gradle jq libc6 libgcc1 libgcc-s1 \
@@ -45,13 +38,9 @@ RUN groupadd -g 1999 ${OctoGroup} \
  
 FROM scratch as intermediary
 
-ARG User=octoworker
-USER ${User}
-
 COPY --from=builder / /
-COPY .bashrc /home/${User}/.bashrc
+COPY .bashrc /root/.bashrc
 
-USER ${User}
-RUN mkdir -p /home/${User}/.docker/ \
-    && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json
+RUN mkdir -p /root/.docker/ \
+    && touch /root/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json

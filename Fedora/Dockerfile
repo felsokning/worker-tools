@@ -7,14 +7,7 @@ ARG Terraform_Version=1.6.6
 
 COPY keygen.sh /keygen.sh
 
-ARG User=octoworker
-ARG Group=octoworker
-ARG OctoGroup=octopus
-
-RUN groupadd -g 1999 ${OctoGroup} \
-    && groupadd -g 2000 ${Group} \
-    && useradd -m -g ${Group} -g ${OctoGroup} -s /bin/bash ${User} \
-    && dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
+RUN dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && dnf update -y \
     && dnf upgrade -y \
     && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang go-md2man libicu lolcat make nano neofetch \
@@ -83,13 +76,9 @@ RUN groupadd -g 1999 ${OctoGroup} \
 
 FROM scratch as intermediary
 
-ARG User=octoworker
-USER ${User}
-
 COPY --from=builder / /
-COPY .bashrc /home/${User}/.bashrc
+COPY .bashrc /root/.bashrc
 
-USER ${User}
-RUN mkdir -p /home/${User}/.docker/ \
-    && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json
+RUN mkdir -p /root/.docker/ \
+    && touch /root/.docker/config.json \
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json

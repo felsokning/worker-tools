@@ -12,9 +12,11 @@ COPY chaotic-mirrorlist /etc/pacman.d/chaotic-mirrorlist
 
 ARG User=octoworker
 ARG Group=octoworker
+ARG OctoGroup=octopus
 
-RUN groupadd ${Group} \
-    && useradd -m -g ${Group} -s /bin/bash ${User} \
+RUN groupadd -g 1999 ${OctoGroup} \
+    && groupadd -g 2000 ${Group} \
+    && useradd -m -g ${Group} -g ${OctoGroup} -s /bin/bash ${User} \
     && pacman-key --init \
     # Populate Arch Linux Keys.
     && pacman-key --populate archlinux \

@@ -8,11 +8,13 @@ ARG Terraform_Version=1.6.6-1
 
 ARG User=octoworker
 ARG Group=octoworker
+ARG OctoGroup=octopus
 
 COPY keygen.sh /keygen.sh
 
-RUN groupadd ${Group} \
-    && useradd -m -g ${Group} -s /bin/bash ${User} \
+RUN groupadd -g 1999 ${OctoGroup} \
+    && groupadd -g 2000 ${Group} \
+    && useradd -m -g ${Group} -g ${OctoGroup} -s /bin/bash ${User} \
     && apt-get update \
     && apt-get dist-upgrade \
     && apt-get upgrade \

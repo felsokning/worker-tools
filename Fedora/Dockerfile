@@ -9,9 +9,11 @@ COPY keygen.sh /keygen.sh
 
 ARG User=octoworker
 ARG Group=octoworker
+ARG OctoGroup=octopus
 
-RUN groupadd ${Group} \
-    && useradd -m -g ${Group} -s /bin/bash ${User} \
+RUN groupadd -g 1999 ${OctoGroup} \
+    && groupadd -g 2000 ${Group} \
+    && useradd -m -g ${Group} -g ${OctoGroup} -s /bin/bash ${User} \
     && dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && dnf update -y \
     && dnf upgrade -y \

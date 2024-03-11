@@ -23,3 +23,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: /Fedora/
+  OctopusDeployServer:
+    image: felsokning/worker-tools:octopusdeployserver
+    build:
+      dockerfile: Dockerfile
+      context: /OctopusDeployServer/  

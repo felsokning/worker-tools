@@ -7,13 +7,15 @@ ARG Helm_Version=v3.7.1
 ARG Kubelogin_Version=v0.0.30
 ARG Terraform_Version=1.6.6
 
-ARG User=octoworker
+ARG User=octopus
 ARG Group=octoworker
+ARG OctoGroup=octopus
 
 COPY keygen.sh /keygen.sh
 
-RUN addgroup -S ${Group} \
-    && adduser --disabled-password --ingroup ${Group} --shell /bin/bash ${User} \
+RUN addgroup -g 1999 -S ${OctoGroup} \
+    && addgroup -g 2000 -S ${Group} \
+    && adduser --disabled-password --ingroup ${Group} --ingroup ${OctoGroup} --shell /bin/bash ${User} \
     && apk update \
     && apk add --upgrade apk-tools \
     && apk upgrade --available \
@@ -79,9 +81,7 @@ RUN addgroup -S ${Group} \
 
 FROM scratch as intermediary
 
-ARG User=octoworker
-USER ${User}
-
+ARG User=octopus
 COPY --from=builder / /
 COPY .bashrc /home/${User}/.bashrc
 

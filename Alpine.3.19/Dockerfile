@@ -21,11 +21,11 @@ RUN addgroup -g 1999 -S ${OctoGroup} \
     && apk upgrade --available \
     # Install .NET and PowerShell dependencies
     && apk add --no-cache bash ca-certificates cargo coreutils curl docker gcompat grep icu-libs krb5-libs less libffi-dev \
-        libgcc libintl libstdc++ make musl-dev ncurses-terminfo-base openssl openssl-dev pass pipx python3-dev py3-pip tzdata \
-        userspace-rcu zlib \
+        libgcc libintl libstdc++ make musl-dev ncurses-terminfo-base neofetch openssl openssl-dev pass pipx python3-dev \
+        py3-pip tzdata userspace-rcu zlib \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/community/ add --no-cache umoci \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache lttng-ust gnupg \
-    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache libssl1.1 \
+    && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache libssl1.1 lolcat \
     # .NET8 did not ship with 3.19 (See: https://github.com/dotnet/sdk/issues/37790)
     && apk -X https://dl-cdn.alpinelinux.org/alpine/edge/community add --no-cache aspnetcore8-runtime dotnet8-runtime dotnet8-sdk \
     # Install Helm 3
@@ -83,12 +83,9 @@ FROM scratch as intermediary
 
 ARG User=octopus
 COPY --from=builder / /
+COPY .bashrc /home/${User}/.bashrc
 
 USER ${User}
 RUN mkdir -p /home/${User}/.docker/ \
     && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
-    && export GPG_TTY=$(tty) \
-    && /keygen.sh \
-    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
-    && pass init $(echo $fingerprint)
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json

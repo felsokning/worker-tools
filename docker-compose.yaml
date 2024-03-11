@@ -5,26 +5,28 @@ services:
     image: felsokning/worker-tools:alpine.3.19
     build: 
       dockerfile: Dockerfile
-      context: /Alpine.3.19/
+      context: ./Alpine.3.19/
   arch:
     image: felsokning/worker-tools:arch
     build: 
       dockerfile: Dockerfile
-      context: /Arch/
-      args:
-        - tag=${tag}
+      context: ./Arch/
   debian:
     image: felsokning/worker-tools:debian.11
     build: 
       dockerfile: Dockerfile
-      context: /Debian.11/
+      context: ./Debian.11/
   fedora:
     image: felsokning/worker-tools:fedora.40
     build:
       dockerfile: Dockerfile
+<<<<<<< HEAD
       context: /Fedora/
   OctopusDeployServer:
     image: felsokning/worker-tools:octopusdeployserver
     build:
       dockerfile: Dockerfile
       context: /OctopusDeployServer/  
+=======
+      context: ./Fedora/
+>>>>>>> 0aac767cf070dc67899d72ecc837d46350389955

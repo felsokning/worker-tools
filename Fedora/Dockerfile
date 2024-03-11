@@ -17,7 +17,8 @@ RUN groupadd -g 1999 ${OctoGroup} \
     && dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && dnf update -y \
     && dnf upgrade -y \
-    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang go-md2man libicu make nano openssl pass python3-pip unzip wget -y \
+    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang go-md2man libicu lolcat make nano neofetch \
+        openssl pass python3-pip unzip wget -y \
     # Add MSFT Respository
     && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
     && chmod +x ./dotnet-install.sh \
@@ -83,13 +84,12 @@ RUN groupadd -g 1999 ${OctoGroup} \
 FROM scratch as intermediary
 
 ARG User=octoworker
+USER ${User}
+
 COPY --from=builder / /
+COPY .bashrc /home/${User}/.bashrc
 
 USER ${User}
 RUN mkdir -p /home/${User}/.docker/ \
     && touch /home/${User}/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json \
-    && export GPG_TTY=$(tty) \
-    && /keygen.sh \
-    && fingerprint=$(gpg2 --list-keys | grep -Po '\w{20,}') \
-    && pass init $(echo $fingerprint)
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /home/${User}/.docker/config.json

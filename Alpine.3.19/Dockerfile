@@ -13,7 +13,7 @@ RUN apk update \
     && apk add --upgrade apk-tools \
     && apk upgrade --available \
     # Install .NET and PowerShell dependencies
-    && apk add --no-cache bash ca-certificates cargo coreutils curl docker gcompat grep icu-libs krb5-libs less libffi-dev \
+    && apk add --no-cache bash ca-certificates cargo coreutils curl docker dos2unix gcompat grep icu-libs krb5-libs less libffi-dev \
         libgcc libintl libstdc++ make musl-dev ncurses-terminfo-base neofetch openssl openssl-dev pass pipx python3-dev \
         py3-pip tzdata userspace-rcu zlib \
     && apk -X https://dl-cdn.alpinelinux.org/alpine/community/ add --no-cache umoci \
@@ -79,4 +79,5 @@ COPY .bashrc /root/.bashrc
 
 RUN mkdir -p /root/.docker/ \
     && touch /root/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json \
+    && dos2unix /root/.bashrc

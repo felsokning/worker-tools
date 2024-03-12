@@ -11,7 +11,7 @@ COPY keygen.sh /keygen.sh
 RUN apt-get update \
     && apt-get dist-upgrade \
     && apt-get upgrade \
-    && apt-get install -y apt-transport-https apt-utils augeas-tools ca-certificates curl docker git gnupg2 gradle jq libc6 libgcc1 libgcc-s1 \
+    && apt-get install -y apt-transport-https apt-utils augeas-tools ca-certificates curl docker dos2unix git gnupg2 gradle jq libc6 libgcc1 libgcc-s1 \
         libgssapi-krb5-2 libicu67 libssl1.1 libstdc++6 lolcat lsb-release maven openssh-client neofetch pass rsync software-properties-common \
         unzip wget zlib1g \
     && wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
@@ -34,7 +34,8 @@ RUN apt-get update \
     && cp /root/.linkerd2/bin/linkerd /usr/local/bin \
     && rm -rf /root/.linkerd2 \
     && pwsh -c 'Install-Module -Force -Name Az -AllowClobber -Scope AllUsers -MaximumVersion "'${Azure_Powershell_Version}'" -Verbose' \
-    && chmod +x /keygen.sh
+    && chmod +x /keygen.sh \
+    && ln -s /usr/games/lolcat /usr/bin/lolcat
  
 FROM scratch as intermediary
 
@@ -43,4 +44,5 @@ COPY .bashrc /root/.bashrc
 
 RUN mkdir -p /root/.docker/ \
     && touch /root/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json \
+    && dos2unix /root/.bashrc

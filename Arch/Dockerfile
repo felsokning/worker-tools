@@ -21,8 +21,8 @@ RUN pacman-key --init \
     && pacman --noconfirm -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' \
     && pacman --noconfirm -Syyu \
     && pacman --noconfirm -S aspnet-runtime chaotic-aur/azure-cli curl dotnet-runtime dotnet-sdk extra/argocd extra/code \
-        extra/docker extra/eksctl extra/gradle core/groff extra/jq extra/kubectl extra/maven extra/nodejs extra/rsync \
-        extra/skopeo extra/terraform extra/umoci extra/yq gnupg lolcat nano neofetch pass powershell unzip wget \
+        extra/docker extra/dos2unix extra/eksctl extra/gradle core/groff extra/jq extra/kubectl extra/maven extra/nodejs \
+        extra/rsync extra/skopeo extra/terraform extra/umoci extra/yq gnupg inetutils lolcat nano neofetch pass powershell unzip wget \
     # Install ECS CLI
     && curl --silent --location "https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-v${Ecs_Cli_Version}" -o /usr/local/bin/ecs-cli \
     && chmod +x /usr/local/bin/ecs-cli \
@@ -62,4 +62,5 @@ COPY .bashrc /root/.bashrc
 
 RUN mkdir -p /root/.docker/ \
     && touch /root/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json \
+    && dos2unix /root/.bashrc

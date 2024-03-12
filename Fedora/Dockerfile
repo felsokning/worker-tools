@@ -10,7 +10,7 @@ COPY keygen.sh /keygen.sh
 RUN dnf remove 'dotnet*' 'aspnet*' 'netstandard*' \
     && dnf update -y \
     && dnf upgrade -y \
-    && dnf install aspnetcore-runtime-8.0 azure-cli curl dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang go-md2man libicu lolcat make nano neofetch \
+    && dnf install aspnetcore-runtime-8.0 azure-cli curl dos2unix dotnet-runtime-8.0 dotnet-sdk-8.0 git gnupg2 golang go-md2man libicu lolcat make nano neofetch \
         openssl pass python3-pip unzip wget -y \
     # Add MSFT Respository
     && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
@@ -81,4 +81,5 @@ COPY .bashrc /root/.bashrc
 
 RUN mkdir -p /root/.docker/ \
     && touch /root/.docker/config.json \
-    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json
+    && printf "{\n\t\"credsStore\":\"pass\"\n}\n" >> /root/.docker/config.json \
+    && dos2unix /root/.bashrc

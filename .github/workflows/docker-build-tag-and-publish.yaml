@@ -35,6 +35,7 @@ jobs:
           flavor: |
             latest=false
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5.1.0
         with:
           context: ${{ github.workspace }}/Alpine.3.19
@@ -45,7 +46,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19'
+          image-ref: ${{ steps.build.outputs.imageid }}
           scan-type: 'image'
           format: 'sarif'
           output: 'alpine-trivy-results.sarif'
@@ -85,6 +86,7 @@ jobs:
           flavor: |
             latest=false
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5.1.0
         with:
           build-args: tag=${{ steps.dailyarchtag.outputs.tag }}
@@ -96,7 +98,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-arch'
+          image-ref: ${{ steps.build.outputs.imageid }}
           scan-type: 'image'
           format: 'sarif'
           output: 'arch-trivy-results.sarif'
@@ -132,6 +134,7 @@ jobs:
           flavor: |
             latest=false
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5.1.0
         with:
           context: ${{ github.workspace }}/Debian.11
@@ -142,7 +145,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-debian.11'
+          image-ref: ${{ steps.build.outputs.imageid }}
           scan-type: 'image'
           format: 'sarif'
           output: 'debian-trivy-results.sarif'
@@ -178,6 +181,7 @@ jobs:
           flavor: |
             latest=false
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5.1.0
         with:
           context: ${{ github.workspace }}/Fedora
@@ -188,7 +192,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-fedora.40'
+          image-ref: ${{ steps.build.outputs.imageid }}
           scan-type: 'image'
           format: 'sarif'
           output: 'fedora-trivy-results.sarif'

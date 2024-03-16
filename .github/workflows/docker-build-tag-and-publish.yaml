@@ -43,7 +43,7 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19'
           format: 'sarif'
@@ -93,7 +93,7 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-arch
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-arch'
           format: 'sarif'
@@ -138,7 +138,7 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-debian.11
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-debian.11'
           format: 'sarif'
@@ -183,7 +183,7 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-fedora.40
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-fedora.40'
           format: 'sarif'

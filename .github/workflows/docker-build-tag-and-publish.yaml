@@ -43,9 +43,10 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        uses: aquasecurity/trivy-action@0.17.0
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19'
+          scan-type: 'image'
           format: 'sarif'
           output: 'alpine-trivy-results.sarif'
       - name: Upload Trivy scan results to GitHub Security tab
@@ -93,9 +94,10 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-arch
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        uses: aquasecurity/trivy-action@0.17.0
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-arch'
+          scan-type: 'image'
           format: 'sarif'
           output: 'arch-trivy-results.sarif'
       - name: Upload Trivy scan results to GitHub Security tab
@@ -138,9 +140,10 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-debian.11
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        uses: aquasecurity/trivy-action@0.17.0
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-debian.11'
+          scan-type: 'image'
           format: 'sarif'
           output: 'debian-trivy-results.sarif'
       - name: Upload Trivy scan results to GitHub Security tab
@@ -183,9 +186,10 @@ jobs:
           tags: felsokning/worker-tools:${{ github.ref_name }}-fedora.40
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        uses: aquasecurity/trivy-action@0.17.0
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.ref_name }}-fedora.40'
+          scan-type: 'image'
           format: 'sarif'
           output: 'fedora-trivy-results.sarif'
       - name: Upload Trivy scan results to GitHub Security tab

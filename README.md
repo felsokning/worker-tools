@@ -1,3 +1,7 @@
+<img src="./images/bmc_qr.png"  width=10% height=10% alt="Buy Me a Coffee!">  &larr; If you would like to buy me a coffee
+
+![workflow](https://img.shields.io/github/actions/workflow/status/felsokning/worker-tools/docker-build-tag-and-publish.yaml) ![last commit](https://img.shields.io/github/last-commit/felsokning/worker-tools) ![commits since release](https://img.shields.io/github/commits-since/felsokning/worker-tools/latest.svg) ![top languages](https://img.shields.io/github/languages/top/felsokning/worker-tools) ![language count](https://img.shields.io/github/languages/count/felsokning/worker-tools) ![sponsors](https://img.shields.io/github/sponsors/felsokning)
+
 ## DISCLAIMER :warning:
 Octopus Deploy defines that [using non glibc distributions is _**not**_ supported by Calamari](https://octopus.com/docs/projects/steps/execution-containers-for-workers#supported-linux-distributions) -- most notably, Alpine. 
 
@@ -42,3 +46,6 @@ See the docs to get started using the `felsokning/worker-tools` image as an [exe
 The images I publish are [semantically versioned](https://semver.org/). 
 
 To ensure stability within your deployment processes, I do not publish non-semantically versioned builds, to prevent breaking your deployment process. Use the full `major.minor.patch` tag when using the `felsokning/worker-tools` image - for example, use `felsokning/worker-tools:1.0.0-alpine.3.19`. 
+
+# Contribute
+![contributions](https://img.shields.io/badge/contributions-welcome-green)

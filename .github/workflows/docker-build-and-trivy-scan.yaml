@@ -25,7 +25,7 @@ jobs:
               run: |
                 docker build -t felsokning/worker-tools:${{ github.sha }}-alpine.3.19 .
             - name: Run Trivy vulnerability scanner
-              uses: aquasecurity/trivy-action@0.17.0
+              uses: aquasecurity/trivy-action@0.19.0
               with:
                 image-ref: docker.io/felsokning/worker-tools:${{ github.sha }}-alpine.3.19
                 scan-type: 'image'

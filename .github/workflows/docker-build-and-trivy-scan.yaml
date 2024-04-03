@@ -21,10 +21,9 @@ jobs:
               uses: actions/checkout@v4.1.1
             - name: Build Docker image
               shell: pwsh
-              working-directory: ${{ github.workspace }}
+              working-directory: ${{ github.workspace }}/Alpine.3.19/
               run: |
-                cat ./Alpine.3.19/Dockerfile
-                docker build -t felsokning/worker-tools:${{ github.sha }}-alpine.3.19 ./Alpine.3.19/Dockerfile
+                docker build -t felsokning/worker-tools:${{ github.sha }}-alpine.3.19 .
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@0.17.0
               with:

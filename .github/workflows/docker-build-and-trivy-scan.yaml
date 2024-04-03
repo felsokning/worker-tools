@@ -1,3 +1,5 @@
+name: Build and Trivy Scan Docker Images
+
 on:
     pull_request:
       types: [ assigned, opened, synchronize, reopened ]
@@ -20,9 +22,7 @@ jobs:
             - name: Build Docker image
               shell: pwsh
               run: |
-                pwd
-                ls -l
-                docker build -t felsokning/worker-tools:${{ github.sha }}-alpine.3.19 ./Alpine.3.19/Dockerfile
+                docker build -t felsokning/worker-tools:${{ github.sha }}-alpine.3.19 ${{ github.workspace }}/Alpine.3.19/Dockerfile
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@0.17.0
               with:

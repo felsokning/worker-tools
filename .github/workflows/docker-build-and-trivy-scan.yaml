@@ -28,7 +28,7 @@ jobs:
               uses: aquasecurity/trivy-action@0.19.0
               with:
                 image-ref: docker.io/felsokning/worker-tools:${{ github.sha }}-alpine.3.19
-                scan-type: 'image'
+                # scan-type: 'image'
                 format: 'sarif'
                 output: '${{ github.sha }}-alpine-trivy-results.sarif'
             - name: Upload Trivy scan results to GitHub Security tab

@@ -22,6 +22,7 @@ jobs:
             - name: Build Docker image
               shell: pwsh
               run: |
+                cat ${{ github.workspace }}/Alpine.3.19/Dockerfile
                 docker build -t felsokning/worker-tools:${{ github.sha }}-alpine.3.19 ${{ github.workspace }}/Alpine.3.19/Dockerfile
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@0.17.0

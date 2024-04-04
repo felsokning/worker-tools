@@ -43,17 +43,6 @@ jobs:
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.17.0
-        with:
-          image-ref: ${{ steps.build.outputs.imageid }}
-          scan-type: 'image'
-          format: 'sarif'
-          output: 'alpine-trivy-results.sarif'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'alpine-trivy-results.sarif'
   push_arch_to_registry:
     name: Build and Publish Arch
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
@@ -95,17 +84,6 @@ jobs:
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-arch
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.17.0
-        with:
-          image-ref: ${{ steps.build.outputs.imageid }}
-          scan-type: 'image'
-          format: 'sarif'
-          output: 'arch-trivy-results.sarif'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'arch-trivy-results.sarif'
   push_debian_to_registry:
     name: Build and Publish Debian
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
@@ -142,17 +120,6 @@ jobs:
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-debian.11
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.17.0
-        with:
-          image-ref: ${{ steps.build.outputs.imageid }}
-          scan-type: 'image'
-          format: 'sarif'
-          output: 'debian-trivy-results.sarif'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'debian-trivy-results.sarif'
   push_fedora_to_registry:
     name: Build and Publish Fedora
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
@@ -189,14 +156,3 @@ jobs:
           push: true
           tags: felsokning/worker-tools:${{ github.ref_name }}-fedora.40
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.17.0
-        with:
-          image-ref: ${{ steps.build.outputs.imageid }}
-          scan-type: 'image'
-          format: 'sarif'
-          output: 'fedora-trivy-results.sarif'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'fedora-trivy-results.sarif'

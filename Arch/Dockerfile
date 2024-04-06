@@ -20,7 +20,7 @@ RUN pacman-key --init \
     # Add Chaotic AUR Keyring.
     && pacman --noconfirm -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' \
     && pacman --noconfirm -Syyu \
-    && pacman --noconfirm -S aspnet-runtime chaotic-aur/azure-cli curl dotnet-runtime dotnet-sdk extra/argocd extra/code \
+    && pacman --noconfirm -S aspnet-runtime extra/azure-cli curl dotnet-runtime dotnet-sdk extra/argocd extra/code \
         extra/docker extra/dos2unix extra/eksctl extra/gradle core/groff extra/jq extra/kubectl extra/maven extra/nodejs \
         extra/rsync extra/skopeo extra/terraform extra/umoci extra/yq gnupg inetutils lolcat nano neofetch pass powershell unzip wget \
     # Install ECS CLI

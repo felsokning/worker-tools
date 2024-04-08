@@ -10,7 +10,9 @@ COPY keygen.sh /keygen.sh
 COPY pacman.conf /etc/pacman.conf
 COPY chaotic-mirrorlist /etc/pacman.d/chaotic-mirrorlist
 
-RUN pacman-key --init \
+# See: https://github.com/moby/buildkit/issues/1267
+RUN sed -i -e 's~#IgnorePkg.*~IgnorePkg = filesystem~g' '/etc/pacman.conf' \
+    && pacman-key --init \
     # Populate Arch Linux Keys.
     && pacman-key --populate archlinux \
     # Receive Chaotic AUR Key.

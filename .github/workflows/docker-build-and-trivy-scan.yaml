@@ -10,24 +10,8 @@ jobs:
     steps:
       - name: Space Clean-Up on Runner
         run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-          docker system prune --all --force
-          df -h
-          echo "Removing large packages"
-          sudo apt-get remove -y '^dotnet-.*'
-          sudo apt-get remove -y '^llvm-.*'
-          sudo apt-get remove -y 'php.*'
-          sudo apt-get remove -y azure-cli google-cloud-sdk hhvm google-chrome-stable firefox mono-devel
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          df -h
-          echo "Removing large directories"
-          # deleting 15GB
-          rm -rf /usr/share/dotnet/
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       - name: Checkout code
         uses: actions/checkout@v3
       - name: "List Files"

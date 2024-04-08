@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: "List Files"
-        run: ls -l
       - name: Get Latest Daily Arch Tag
         id: dailyarchtag
         shell: pwsh

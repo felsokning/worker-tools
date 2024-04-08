@@ -8,6 +8,13 @@ jobs:
     name: "Build and Scan"
     runs-on: ubuntu-20.04
     steps:
+      - name: "Nuke Docker Images"
+        run: |
+            docker system prune --all --force
+            sudo apt -y autoremove --purge
+            sudo apt -y autoclean
+            sudo apt clean
+            df -h
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Get Latest Daily Arch Tag

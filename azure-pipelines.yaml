@@ -14,7 +14,7 @@ jobs:
           targetType: 'inline'
           script: |
             $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty);
-            Write-Host "##vso[task.setvariable variable=archTag;isOutput=true]$tag"
+            Write-Host "##vso[task.setvariable variable=archTag]$tag"
       - task: Docker@2   
         displayName: Build   
         inputs:

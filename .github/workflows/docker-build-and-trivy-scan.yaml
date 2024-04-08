@@ -14,7 +14,7 @@ jobs:
         run: ls -l
       - name: Build an image from Dockerfile
         run: |
-          docker build -t docker.io/felsokning/worker-tools:${{ github.sha }}-arch ./Arch/Dockerfile
+          docker build -t docker.io/felsokning/worker-tools:${{ github.sha }}-arch $pwd/Arch/Dockerfile
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

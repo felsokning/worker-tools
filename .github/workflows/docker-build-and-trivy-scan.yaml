@@ -21,10 +21,16 @@ jobs:
         id: dailyarchtag
         shell: pwsh
         run: $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty); Write-Output "tag=$($tag)" >> $env:GITHUB_OUTPUT
-      - name: Build an image from Dockerfile
-        working-directory: ./Arch
-        run: |
-          docker build --build-arg tag=${{ steps.dailyarchtag.outputs.tag }} -t docker.io/felsokning/worker-tools:${{ github.sha }}-arch .
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5.1.0
+        with:
+          build-args: tag=${{ steps.dailyarchtag.outputs.tag }}
+          context: ${{ github.workspace }}/Arch
+          file: ./Arch/Dockerfile
+          push: false
+          tags: felsokning/worker-tools:${{ github.ref_name }}-arch
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

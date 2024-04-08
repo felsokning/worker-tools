@@ -10,9 +10,15 @@ jobs:
     steps:
       - name: Space Clean-Up on Runner
         run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-          sudo rm -rf /opt/hostedtoolcache
+            sudo swapoff -a
+            sudo rm -f /swapfile
+            sudo apt clean
+            docker rmi $(docker image ls -aq)
+            df -h
+            docker system prune --all --force
+            sudo rm -rf /usr/share/dotnet
+            sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+            sudo rm -rf /opt/hostedtoolcache
       - name: Checkout code
         uses: actions/checkout@v4
       - name: "List Files"

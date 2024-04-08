@@ -22,8 +22,8 @@ jobs:
           command: build     
           Dockerfile: '**/Arch/Dockerfile'    
           tags: felsokning/worker-tools:$(Build.BuildId)-arch
-      - task: trivy@1.4.2
-        displayName: "Scan "
+      - task: trivy@1
+        displayName: "Scan Arch Image"
         inputs:
           docker: false
           exitCode: 0

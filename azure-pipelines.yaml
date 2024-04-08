@@ -15,7 +15,7 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
-            docker system prune --all --force
+            docker rmi -f $(docker images -aq)
       - task: Bash@3
         displayName: "Clean Other Unused Resources"
         inputs:

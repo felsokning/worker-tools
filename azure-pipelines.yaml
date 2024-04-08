@@ -3,9 +3,12 @@ pr:
     include:
       - '*'
 
+
 jobs:
   - job: Scan_Images
     displayName: Build and Scan Images with Trivy
+    workspace:
+      clean: all # what to clean up before the job runs
     steps:
       - task: PowerShell@2
         displayName: "Clean All Images (Space Required to Build)"

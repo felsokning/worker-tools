@@ -8,15 +8,6 @@ jobs:
     name: "Build and Scan"
     runs-on: ubuntu-20.04
     steps:
-      - name: "Nuke Docker Images"
-        run: |
-            docker rmi `docker images -q`
-            sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/sudo apt/sources.list.d
-            sudo apt -y autoremove --purge
-            sudo apt -y autoclean
-            sudo apt clean
-            rm --recursive --force "$AGENT_TOOLSDIRECTORY"
-            df -h
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Get Latest Daily Arch Tag

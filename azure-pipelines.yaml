@@ -19,7 +19,7 @@ jobs:
         displayName: Build   
         inputs:
           arguments: tag=$[ dependencies.Scan_Images.outputs['archTag.tag'] ]
-          buildContext: ./Arch/    
+          buildContext: './Arch/'
           command: build     
           Dockerfile: './Dockerfile'    
           tags: felsokning/worker-tools:$(Build.BuildId)-arch

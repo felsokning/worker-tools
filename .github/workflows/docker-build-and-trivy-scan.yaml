@@ -29,7 +29,7 @@ jobs:
           context: ${{ github.workspace }}/Arch
           file: ./Arch/Dockerfile
           push: false
-          tags: felsokning/worker-tools:${{ github.ref_name }}-arch
+          tags: felsokning/worker-tools:${{ github.sha }}-arch
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run Trivy vulnerability scanner

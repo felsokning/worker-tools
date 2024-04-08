@@ -8,6 +8,12 @@ jobs:
     displayName: Build and Scan Images with Trivy
     steps:
       - task: PowerShell@2
+        displayName: "Clean All Images (Space Required to Build)"
+        inputs:
+          targetType: 'inline'
+          script: |
+            docker system prune --all --force
+      - task: PowerShell@2
         name: archTag
         displayName: "Obtain Latest Arch Tag"
         inputs:
@@ -16,7 +22,7 @@ jobs:
             $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty);
             Write-Host "##vso[task.setvariable variable=archTag]$tag"
       - task: Docker@2   
-        displayName: Build   
+        displayName: "Build Arch Image"
         inputs:
           arguments: --build-arg tag=$(archTag)
           command: build     

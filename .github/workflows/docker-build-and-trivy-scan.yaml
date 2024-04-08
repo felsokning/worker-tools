@@ -8,6 +8,8 @@ jobs:
     name: "Build and Scan"
     runs-on: ubuntu-20.04
     steps:
+      - name: "Nuke Docker Images"
+        run: docker rmi $(docker images -q --filter "dangling=true")
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Get Latest Daily Arch Tag

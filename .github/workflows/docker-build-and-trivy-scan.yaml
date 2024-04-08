@@ -13,8 +13,9 @@ jobs:
       - name: "List Files"
         run: ls -l
       - name: Build an image from Dockerfile
+        working-directory: ./Arch
         run: |
-          docker build -t docker.io/felsokning/worker-tools:${{ github.sha }}-arch $pwd/Arch/Dockerfile
+          docker build -t docker.io/felsokning/worker-tools:${{ github.sha }}-arch .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

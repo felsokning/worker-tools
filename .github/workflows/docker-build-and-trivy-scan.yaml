@@ -8,17 +8,6 @@ jobs:
     name: "Build and Scan"
     runs-on: [self-hosted]
     steps:
-      - name: Space Clean-Up on Runner
-        run: |
-            sudo swapoff -a
-            sudo rm -f /swapfile
-            sudo apt clean
-            docker rmi $(docker image ls -aq)
-            df -h
-            docker system prune --all --force
-            sudo rm -rf /usr/share/dotnet
-            sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-            sudo rm -rf /opt/hostedtoolcache
       - name: Checkout code
         uses: actions/checkout@v4
       - name: "List Files"
@@ -37,14 +26,12 @@ jobs:
           push: false
           tags: felsokning/worker-tools:${{ github.sha }}-arch
           labels: ${{ steps.meta.outputs.labels }}
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.sha }}-arch'
           format: 'sarif'
           output: 'trivy-results.sarif'
-
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:

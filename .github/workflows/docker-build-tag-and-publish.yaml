@@ -10,16 +10,8 @@ jobs:
   push_alpine_to_registry:
     name: Build and Publish Alpine
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
-      - name: Space Clean-Up on Runner
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-          docker system prune --all --force
       - name: Check out code
         uses: actions/checkout@v4.1.1
       - name: Login to Docker Hub

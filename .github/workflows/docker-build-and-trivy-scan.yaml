@@ -14,7 +14,7 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           sudo rm -rf /opt/hostedtoolcache
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: "List Files"
         run: ls -l
       - name: Get Latest Daily Arch Tag

@@ -16,6 +16,17 @@ jobs:
           targetType: 'inline'
           script: |
             docker system prune --all --force
+      - task: Bash@3
+        displayName: "Clean Other Unused Resources"
+        inputs:
+          targetType: 'inline'
+          script: |
+            df -h
+            echo now freeing disk space
+            sudo rm -rf /usr/local/lib/android # android sdks
+            sudo rm -rf /usr/local/.ghcup # haskell stuff
+            echo freed up space:
+            df -h
       - task: PowerShell@2
         name: archTag
         displayName: "Obtain Latest Arch Tag"

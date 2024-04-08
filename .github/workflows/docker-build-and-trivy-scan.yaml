@@ -25,7 +25,7 @@ jobs:
           tags: felsokning/worker-tools:${{ github.sha }}-arch
           labels: ${{ steps.meta.outputs.labels }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.19.0
         with:
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.sha }}-arch'
           format: 'sarif'

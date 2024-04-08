@@ -27,6 +27,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.19.0
         with:
+          docker-host: /run/docker.sock
           image-ref: 'docker.io/felsokning/worker-tools:${{ github.sha }}-arch'
           format: 'sarif'
           output: 'trivy-results.sarif'

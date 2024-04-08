@@ -1,0 +1,31 @@
+pr:
+  branches:
+    include:
+      - '*'
+
+jobs:
+  - job: Scan_Images
+    displayName: Build and Scan Images with Trivy
+    steps:
+      - task: PowerShell@2
+        name: archTag
+        displayName: "Obtain Latest Arch Tag"
+        inputs:
+          targetType: 'inline'
+          script: |
+            $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty);
+            Write-Host "##vso[task.setvariable variable=archTag;;isOutput=true]$tag"
+      - task: Docker@2   
+        displayName: Build   
+        inputs:
+          arguments: tag=$[ dependencies.Scan_Images.outputs['archTag.tag'] ]     
+          command: build     
+          Dockerfile: '**/Arch/Dockerfile'    
+          tags: felsokning/worker-tools:$(Build.BuildId)-arch
+      - task: trivy@1.4.2
+        displayName: "Scan "
+        inputs:
+          docker: false
+          exitCode: 0
+          image: felsokning/worker-tools:$(Build.BuildId)-arch
+          severities: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'

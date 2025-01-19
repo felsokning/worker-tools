@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# rootfs - this is versioned by the container, so no need to include it in source
+*.tar.xz
+
+
 # User-specific files
 *.rsuser
 *.suo

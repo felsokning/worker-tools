@@ -7,10 +7,10 @@ on:
     - created
 
 jobs:
-  push_alpine_to_registry:
-    name: Build and Publish Alpine
+  push_worker_tools_to_registry:
+    name: Build and Publish Worker Tools
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    runs-on: [self-hosted]
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4.1.1
@@ -26,125 +26,17 @@ jobs:
           images: felsokning/worker-tools
           flavor: |
             latest=false
+      - name: Packer Build
+        working-directory: ./packer
+        run: |
+          packer init
+          packer build .
       - name: Build and push Docker image
         id: build
         uses: docker/build-push-action@v5.1.0
         with:
           context: ${{ github.workspace }}/Alpine.3.19
-          file: ./Alpine.3.19/Dockerfile
+          file: ./docker/Dockerfile
           push: true
-          tags: felsokning/worker-tools:${{ github.ref_name }}-alpine.3.19
-          labels: ${{ steps.meta.outputs.labels }}
-  push_arch_to_registry:
-    name: Build and Publish Arch
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Space Clean-Up on Runner
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-          docker system prune --all --force
-      - name: Get Latest Daily Arch Tag
-        id: dailyarchtag
-        shell: pwsh
-        run: $tag=(Invoke-RestMethod "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/tags?format=atom" | Sort-Object -Property updated -Descending | Select-Object -First 1 | Select-Object -ExpandProperty title).Replace("v", [string]::Empty); Write-Output "tag=$($tag)" >> $env:GITHUB_OUTPUT
-      - name: Check out code
-        uses: actions/checkout@v4.1.1
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3.0.0
-        with:
-          username: felsokning
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5.5.1
-        with:
-          images: felsokning/worker-tools
-          flavor: |
-            latest=false
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5.1.0
-        with:
-          build-args: tag=${{ steps.dailyarchtag.outputs.tag }}
-          context: ${{ github.workspace }}/Arch
-          file: ./Arch/Dockerfile
-          push: true
-          tags: felsokning/worker-tools:${{ github.ref_name }}-arch
-          labels: ${{ steps.meta.outputs.labels }}
-  push_debian_to_registry:
-    name: Build and Publish Debian
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Space Clean-Up on Runner
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-          docker system prune --all --force
-      - name: Check out code
-        uses: actions/checkout@v4.1.1
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3.0.0
-        with:
-          username: felsokning
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5.5.1
-        with:
-          images: felsokning/worker-tools
-          flavor: |
-            latest=false
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5.1.0
-        with:
-          context: ${{ github.workspace }}/Debian.11
-          file: ./Debian.11/Dockerfile
-          push: true
-          tags: felsokning/worker-tools:${{ github.ref_name }}-debian.11
-          labels: ${{ steps.meta.outputs.labels }}
-  push_fedora_to_registry:
-    name: Build and Publish Fedora
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Space Clean-Up on Runner
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-          docker system prune --all --force
-      - name: Check out code
-        uses: actions/checkout@v4.1.1
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3.0.0
-        with:
-          username: felsokning
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5.5.1
-        with:
-          images: felsokning/worker-tools
-          flavor: |
-            latest=false
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5.1.0
-        with:
-          context: ${{ github.workspace }}/Fedora
-          file: ./Fedora/Dockerfile
-          push: true
-          tags: felsokning/worker-tools:${{ github.ref_name }}-fedora.40
+          tags: felsokning/worker-tools:${{ github.ref_name }}
           labels: ${{ steps.meta.outputs.labels }}

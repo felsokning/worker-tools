@@ -31,12 +31,16 @@ jobs:
         run: |
           packer init -upgrade .
           packer build .
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5.1.0
-        with:
-          context: ${{ github.workspace }}
-          file: ./docker/Dockerfile
-          push: true
-          tags: felsokning/worker-tools:${{ github.ref_name }}
-          labels: ${{ steps.meta.outputs.labels }}
+          cd ..
+          cd /docker
+          docker build -t felsokning/worker-tools:${{ github.ref_name }} .
+          docker push felsokning/worker-tools:${{ github.ref_name }}
+      # - name: Build and push Docker image
+      #   id: build
+      #   uses: docker/build-push-action@v5.1.0
+      #   with:
+      #     context: ${{ github.workspace }}
+      #     file: ./docker/Dockerfile
+      #     push: true
+      #     tags: felsokning/worker-tools:${{ github.ref_name }}
+      #     labels: ${{ steps.meta.outputs.labels }}

@@ -31,8 +31,9 @@ jobs:
         run: |
           packer init -upgrade .
           packer build .
-          cd ..
-          cd /docker
+      - name: Packer Build
+        working-directory: ./docker
+        run: |
           docker build -t felsokning/worker-tools:${{ github.ref_name }} .
           docker push felsokning/worker-tools:${{ github.ref_name }}
       # - name: Build and push Docker image

@@ -1,0 +1,46 @@
+name: Build and Test Docker Image
+
+on:
+    pull_request:
+      branches:
+        - '*'
+
+jobs:
+  build_and_test_docker_image:
+    name: Build and Test Worker Tools
+    runs-on: ubuntu-24.04
+    steps:
+        - name: Clean-Up Runner for Space
+          run: |
+            docker system prune --all --force
+            sudo rm -rf /usr/local/.ghcup
+            sudo rm -rf /usr/local/lib/android/sdk/ndk
+            sudo rm -rf /usr/local/lib/android
+            sudo rm -rf /usr/local/share/boost
+            sudo rm -rf /usr/share/dotnet
+            sudo rm -rf /opt/ghc
+            sudo rm -rf /opt/hostedtoolcache/CodeQL
+        - name: Check out code
+          uses: actions/checkout@v4.1.1
+        - name: Setup `packer`
+          uses: hashicorp/setup-packer@main
+          id: packer_setup
+          with:
+            # Match Windows Version[s] for limited deviations
+            version: "1.11.2"
+        - name: Packer Init
+          id: packer_init
+          working-directory: ./packer
+          run: |
+            packer init -upgrade .
+        - name: Packer Build
+          working-directory: ./packer
+          run: |
+            packer build .
+        - name: Docker Build
+          working-directory: ./docker
+          run: |
+            docker build -t felsokning/worker-tools:${{ github.sha }} .
+        - name: Pester Test
+          run: |
+            docker run --rm docker.io/felsokning/worker-tools:${{ github.sha }} pwsh -c "Invoke-Pester /home/octopus/Test-PesterTests.ps1"

@@ -40,7 +40,7 @@ jobs:
         - name: Docker Build
           working-directory: ./docker
           run: |
-            docker build -t felsokning/worker-tools:${{ github.sha }}
+            docker build -t felsokning/worker-tools:${{ github.sha }} .
         - name: Pester Test
           run: |
             docker run --rm docker.io/felsokning/worker-tools:${{ github.sha }} pwsh -c "Invoke-Pester /home/octopus/Test-PesterTests.ps1"
